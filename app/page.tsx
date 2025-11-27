@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
   return (
@@ -9,11 +8,11 @@ export default function HomePage() {
         <nav className="flex justify-between items-center">
           <div className="text-2xl font-bold text-indigo-600">Vario</div>
           <div className="space-x-4">
-            <Link href="/login">
-              <Button variant="ghost">Sign In</Button>
+            <Link href="/login" className="px-4 py-2 text-gray-700 hover:text-indigo-600 transition">
+              Sign In
             </Link>
-            <Link href="/signup">
-              <Button>Get Started</Button>
+            <Link href="/signup" className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+              Get Started
             </Link>
           </div>
         </nav>
@@ -34,15 +33,11 @@ export default function HomePage() {
             Perfect for creators, influencers, and businesses.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/signup">
-              <Button size="lg" className="text-lg px-8">
-                Start For Free
-              </Button>
+            <Link href="/signup" className="px-8 py-3 bg-indigo-600 text-white text-lg rounded-lg hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-xl">
+              Start For Free
             </Link>
-            <Link href="/demo">
-              <Button size="lg" variant="outline" className="text-lg px-8">
-                View Demo
-              </Button>
+            <Link href="/demo" className="px-8 py-3 border-2 border-indigo-600 text-indigo-600 text-lg rounded-lg hover:bg-indigo-50 transition-colors">
+              View Demo
             </Link>
           </div>
         </div>
