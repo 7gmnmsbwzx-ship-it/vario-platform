@@ -1,0 +1,7 @@
+{
+  "build_command": "npm install --legacy-peer-deps && npx @cloudflare/next-on-pages",
+  "destination_dir": ".vercel/output/static",
+  "compatibility_date": "2024-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "node_version": "18"
+}
