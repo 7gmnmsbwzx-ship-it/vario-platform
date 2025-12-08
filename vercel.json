@@ -1,16 +1,5 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "https://ifhmmsxrbrqsclfnevfx.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmaG1tc3hyYnJxc2NsZm5ldmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNzE3MzAsImV4cCI6MjA3OTY0NzczMH0.GkQTlz2hSqpJ6askrr7hRdz2edDFetNqzneHIE_Et4I",
-    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmaG1tc3hyYnJxc2NsZm5ldmZ4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDA3MTczMCwiZXhwIjoyMDc5NjQ3NzMwfQ.DkjWvfN8dWyTojEghO_5kRJsNsjbb8W-78htbLIlJqU",
-    "OPENROUTER_API_KEY": "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",
-    "OPENROUTER_MODEL": "x-ai/grok-2-1212:free",
-    "NEXT_PUBLIC_APP_URL": "https://vario-platform.vercel.app",
-    "NODE_VERSION": "18"
-  }
+  "buildCommand": "npm run build",
+  "installCommand": "npm install"
 }
