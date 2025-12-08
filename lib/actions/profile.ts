@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache'
 
 // Get current user's profile
 export async function getProfile() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user }, error: userError } = await supabase.auth.getUser()
   if (userError || !user) {
@@ -28,7 +28,7 @@ export async function getProfile() {
 }
 
 export async function updateProfile(formData: FormData) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -91,7 +91,7 @@ export async function updateProfile(formData: FormData) {
 }
 
 export async function getUserProfile(username: string) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: profile, error } = await supabase
     .from('users_profile')
@@ -108,7 +108,7 @@ export async function getUserProfile(username: string) {
 }
 
 export async function uploadAvatar(formData: FormData) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {

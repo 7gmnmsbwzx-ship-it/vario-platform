@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       : request.headers.get('x-real-ip') || null
 
     // Save to database
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     
     const { error } = await supabase
       .from('page_analytics')
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint for retrieving analytics
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     
     // Get current user
     const { data: { user } } = await supabase.auth.getUser()

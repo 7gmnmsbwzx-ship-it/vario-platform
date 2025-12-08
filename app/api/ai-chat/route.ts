@@ -93,7 +93,7 @@ and how to connect with them. Keep responses concise and engaging.`
     const tokensUsed = data.usage?.total_tokens || 0
 
     // Save conversation to database
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     
     // Check if conversation exists
     const { data: existingConv } = await supabase

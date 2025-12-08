@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache'
 import type { BlockType } from '@/types/database.types'
 
 export async function getUserBlocks(userId: string) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: blocks, error } = await supabase
     .from('blocks')
@@ -26,7 +26,7 @@ export async function getUserBlocks(userId: string) {
 
 // Simpler version that accepts direct parameters
 export async function createBlockSimple(type: string, content: any) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -75,7 +75,7 @@ export async function createBlockSimple(type: string, content: any) {
 }
 
 export async function createBlock(formData: FormData) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -128,7 +128,7 @@ export async function createBlock(formData: FormData) {
 }
 
 export async function updateBlock(blockId: string, formData: FormData) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -158,7 +158,7 @@ export async function updateBlock(blockId: string, formData: FormData) {
 }
 
 export async function deleteBlock(blockId: string) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -181,7 +181,7 @@ export async function deleteBlock(blockId: string) {
 }
 
 export async function reorderBlocks(blockIds: string[]) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -205,7 +205,7 @@ export async function reorderBlocks(blockIds: string[]) {
 }
 
 export async function uploadBlockImage(formData: FormData) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {

@@ -33,7 +33,7 @@ export async function signUp(
       }
     }
 
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
 
     // Check username availability (using anon key is fine for SELECT)
     const { data: existingUser, error: checkError } = await supabase
@@ -146,7 +146,7 @@ export async function signIn(email: string, password: string) {
     // Use validated data
     const validatedData = validation.data
 
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
 
     const { data, error: authError } = await supabase.auth.signInWithPassword({
       email: validatedData.email,
@@ -176,14 +176,14 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signOut() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
   redirect('/')
 }
 
 export async function getCurrentUser() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   
   const { data: { user } } = await supabase.auth.getUser()
   
