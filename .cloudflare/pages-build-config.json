@@ -1,0 +1,5 @@
+{
+  "build_command": "npm install --legacy-peer-deps && npm run build",
+  "destination_dir": ".next",
+  "node_version": "18"
+}
