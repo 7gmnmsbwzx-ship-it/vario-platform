@@ -88,6 +88,9 @@ log/
 /dist
 /build
 /.cache
+/.vercel
+/.wrangler
+.wrangler/
 
 # Testing
 /coverage
