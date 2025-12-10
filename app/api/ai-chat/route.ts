@@ -140,10 +140,10 @@ and how to connect with them. Keep responses concise and engaging.`
       await supabase
         .from('ai_conversations')
         .update({
-          messages: updatedMessages,
+          messages: updatedMessages as any,
           tokens_used: currentTokens + tokensUsed,
           updated_at: new Date().toISOString(),
-        })
+        } as any)
         .eq('id', conv.id)
     } else {
       // Create new conversation
