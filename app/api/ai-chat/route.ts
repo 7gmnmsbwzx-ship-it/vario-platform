@@ -130,9 +130,11 @@ and how to connect with them. Keep responses concise and engaging.`
       },
     ]
 
-    if (existingConv?.id) {
+    // Cast to any to access properties safely
+    const conv = existingConv as any
+    
+    if (conv?.id) {
       // Update existing conversation
-      const conv = existingConv as any
       const currentTokens = (typeof conv.tokens_used === 'number') ? conv.tokens_used : 0
       
       await supabase
