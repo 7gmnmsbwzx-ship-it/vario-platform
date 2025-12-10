@@ -94,17 +94,17 @@ and how to connect with them. Keep responses concise and engaging.`
     const supabase = await createServerClient()
     
     // Check if conversation exists
-    const { data: existingConv } = await supabase
+    const { data: existingConv, error: convError } = await supabase
       .from('ai_conversations')
       .select('id, messages, tokens_used')
       .eq('user_id', userId)
       .eq('visitor_id', visitorId || 'anonymous')
       .order('created_at', { ascending: false })
       .limit(1)
-      .single()
+      .maybeSingle()
 
     // Type-safe message handling
-    const existingMessages = Array.isArray(existingConv?.messages) 
+    const existingMessages = (existingConv && Array.isArray(existingConv.messages)) 
       ? (existingConv.messages as Array<{role: string; content: string; timestamp?: string}>)
       : []
     
