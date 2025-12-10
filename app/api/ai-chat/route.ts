@@ -104,8 +104,9 @@ and how to connect with them. Keep responses concise and engaging.`
       .maybeSingle()
 
     // Type-safe message handling
-    const existingMessages = (existingConv && Array.isArray(existingConv.messages)) 
-      ? (existingConv.messages as Array<{role: string; content: string; timestamp?: string}>)
+    type MessageType = {role: string; content: string; timestamp?: string}
+    const existingMessages: MessageType[] = (existingConv?.messages && Array.isArray(existingConv.messages)) 
+      ? (existingConv.messages as MessageType[])
       : []
     
     const updatedMessages = [
