@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     // Save to database
     const supabase = await createServerClient()
     
-    const { error } = await ((supabase as any)
+    const { error } = await (supabase as any)
       .from('page_analytics')
       .insert({
         user_id: userId,
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         referrer,
         user_agent: userAgent,
         ip_address: ipAddress,
-      }))
+      })
 
     if (error) {
       console.error('Analytics insert error:', error)
