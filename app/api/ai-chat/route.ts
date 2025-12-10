@@ -105,19 +105,18 @@ and how to connect with them. Keep responses concise and engaging.`
 
     // Type-safe message handling with explicit type definitions
     type MessageType = {role: string; content: string; timestamp?: string}
-    type ConversationType = {
-      id?: string
-      messages?: unknown
-      tokens_used?: number
-    } | null
     
-    // Treat existingConv as the defined type
-    const conversation: ConversationType = existingConv
+    // Extract messages safely with proper type checking
     let existingMessages: MessageType[] = []
     
-    // Safely extract and map messages
-    if (conversation?.messages && Array.isArray(conversation.messages)) {
-      existingMessages = conversation.messages.map(msg => msg as MessageType)
+    // Check if existingConv exists and has messages property
+    if (existingConv && 'messages' in existingConv) {
+      const messages = existingConv.messages
+      
+      // Verify it's an array before mapping
+      if (Array.isArray(messages)) {
+        existingMessages = messages.map((msg: any) => msg as MessageType)
+      }
     }
     
     const updatedMessages = [
@@ -130,16 +129,20 @@ and how to connect with them. Keep responses concise and engaging.`
       },
     ]
 
-    if (conversation?.id) {
+    if (existingConv?.id) {
       // Update existing conversation
+      const currentTokens = ('tokens_used' in existingConv && typeof existingConv.tokens_used === 'number') 
+        ? existingConv.tokens_used 
+        : 0
+      
       await supabase
         .from('ai_conversations')
         .update({
           messages: updatedMessages,
-          tokens_used: ((conversation.tokens_used as number) || 0) + tokensUsed,
+          tokens_used: currentTokens + tokensUsed,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', conversation.id)
+        .eq('id', existingConv.id)
     } else {
       // Create new conversation
       await supabase
