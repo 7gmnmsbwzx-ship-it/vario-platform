@@ -103,12 +103,21 @@ and how to connect with them. Keep responses concise and engaging.`
       .limit(1)
       .maybeSingle()
 
-    // Type-safe message handling
+    // Type-safe message handling with explicit type definitions
     type MessageType = {role: string; content: string; timestamp?: string}
+    type ConversationType = {
+      id?: string
+      messages?: unknown
+      tokens_used?: number
+    } | null
+    
+    // Treat existingConv as the defined type
+    const conversation: ConversationType = existingConv
     let existingMessages: MessageType[] = []
     
-    if (existingConv && existingConv.messages && Array.isArray(existingConv.messages)) {
-      existingMessages = existingConv.messages as MessageType[]
+    // Safely extract and map messages
+    if (conversation?.messages && Array.isArray(conversation.messages)) {
+      existingMessages = conversation.messages.map(msg => msg as MessageType)
     }
     
     const updatedMessages = [
@@ -121,16 +130,16 @@ and how to connect with them. Keep responses concise and engaging.`
       },
     ]
 
-    if (existingConv) {
+    if (conversation?.id) {
       // Update existing conversation
       await supabase
         .from('ai_conversations')
         .update({
           messages: updatedMessages,
-          tokens_used: (existingConv.tokens_used || 0) + tokensUsed,
+          tokens_used: ((conversation.tokens_used as number) || 0) + tokensUsed,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', existingConv.id)
+        .eq('id', conversation.id)
     } else {
       // Create new conversation
       await supabase
