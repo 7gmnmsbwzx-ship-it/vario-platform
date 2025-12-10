@@ -138,24 +138,24 @@ and how to connect with them. Keep responses concise and engaging.`
       const currentTokens = (typeof conv.tokens_used === 'number') ? conv.tokens_used : 0
       
       // Use type assertion for the entire query chain
-      await (supabase
+      await ((supabase as any)
         .from('ai_conversations')
         .update({
           messages: updatedMessages,
           tokens_used: currentTokens + tokensUsed,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', conv.id) as any)
+        .eq('id', conv.id))
     } else {
       // Create new conversation
-      await (supabase
+      await ((supabase as any)
         .from('ai_conversations')
         .insert({
           user_id: userId,
           visitor_id: visitorId || 'anonymous',
           messages: updatedMessages,
           tokens_used: tokensUsed,
-        }) as any)
+        }))
     }
 
     // Track analytics
