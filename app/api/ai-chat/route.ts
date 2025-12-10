@@ -159,7 +159,7 @@ and how to connect with them. Keep responses concise and engaging.`
     }
 
     // Track analytics
-    await supabase
+    await ((supabase as any)
       .from('page_analytics')
       .insert({
         user_id: userId,
@@ -170,7 +170,7 @@ and how to connect with them. Keep responses concise and engaging.`
           tokens_used: tokensUsed,
         },
         visitor_id: visitorId || 'anonymous',
-      })
+      }))
 
     return NextResponse.json({
       message: aiMessage,
