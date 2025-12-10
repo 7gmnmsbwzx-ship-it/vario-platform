@@ -15,7 +15,7 @@ export async function getProfile() {
     return { error: 'Not authenticated' }
   }
 
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile, error: profileError } = await (supabase as any)
     .from('users_profile')
     .select('*')
     .eq('id', user.id)
@@ -54,14 +54,14 @@ export async function updateProfile(formData: FormData) {
   }
 
   // Check username availability (if changed)
-  const { data: currentProfile } = await supabase
+  const { data: currentProfile } = await (supabase as any)
     .from('users_profile')
     .select('username')
     .eq('id', user.id)
     .single()
 
   if (currentProfile && currentProfile.username !== validation.data.username) {
-    const { data: existingUser } = await supabase
+    const { data: existingUser } = await (supabase as any)
       .from('users_profile')
       .select('username')
       .eq('username', validation.data.username.toLowerCase())
@@ -73,7 +73,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   // Update profile
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('users_profile')
     .update({
       ...validation.data,
@@ -94,7 +94,7 @@ export async function updateProfile(formData: FormData) {
 export async function getUserProfile(username: string) {
   const supabase = await createServerClient()
 
-  const { data: profile, error } = await supabase
+  const { data: profile, error } = await (supabase as any)
     .from('users_profile')
     .select('*')
     .eq('username', username.toLowerCase())
@@ -152,7 +152,7 @@ export async function uploadAvatar(formData: FormData) {
     .getPublicUrl(fileName)
 
   // Update profile with new avatar URL
-  const { error: updateError } = await supabase
+  const { error: updateError } = await (supabase as any)
     .from('users_profile')
     .update({ avatar_url: publicUrl })
     .eq('id', user.id)
