@@ -111,7 +111,8 @@ and how to connect with them. Keep responses concise and engaging.`
     
     // Check if existingConv exists and has messages property
     if (existingConv && 'messages' in existingConv) {
-      const messages = existingConv.messages
+      // Use type assertion to access the property
+      const messages = (existingConv as any).messages
       
       // Verify it's an array before mapping
       if (Array.isArray(messages)) {
@@ -131,9 +132,8 @@ and how to connect with them. Keep responses concise and engaging.`
 
     if (existingConv?.id) {
       // Update existing conversation
-      const currentTokens = ('tokens_used' in existingConv && typeof existingConv.tokens_used === 'number') 
-        ? existingConv.tokens_used 
-        : 0
+      const conv = existingConv as any
+      const currentTokens = (typeof conv.tokens_used === 'number') ? conv.tokens_used : 0
       
       await supabase
         .from('ai_conversations')
@@ -142,7 +142,7 @@ and how to connect with them. Keep responses concise and engaging.`
           tokens_used: currentTokens + tokensUsed,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', existingConv.id)
+        .eq('id', conv.id)
     } else {
       // Create new conversation
       await supabase
