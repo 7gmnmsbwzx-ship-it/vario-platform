@@ -12,7 +12,7 @@ import type { BlockType } from '@/types/database.types'
 export async function getUserBlocks(userId: string) {
   const supabase = await createServerClient()
 
-  const { data: blocks, error } = await supabase
+  const { data: blocks, error } = await (supabase as any)
     .from('blocks')
     .select('*')
     .eq('user_id', userId)
@@ -37,7 +37,7 @@ export async function createBlockSimple(type: string, content: any) {
 
   try {
     // Get max order_index
-    const { data: existingBlocks } = await supabase
+    const { data: existingBlocks } = await (supabase as any)
       .from('blocks')
       .select('order_index')
       .eq('user_id', user.id)
@@ -49,7 +49,7 @@ export async function createBlockSimple(type: string, content: any) {
       : 0
 
     // Insert block
-    const { data: newBlock, error } = await supabase
+    const { data: newBlock, error } = await (supabase as any)
       .from('blocks')
       .insert({
         user_id: user.id,
@@ -96,7 +96,7 @@ export async function createBlock(formData: FormData) {
   }
 
   // Get max order_index
-  const { data: existingBlocks } = await supabase
+  const { data: existingBlocks } = await (supabase as any)
     .from('blocks')
     .select('order_index')
     .eq('user_id', user.id)
@@ -108,7 +108,7 @@ export async function createBlock(formData: FormData) {
     : 0
 
   // Insert block
-  const { data: newBlock, error } = await supabase
+  const { data: newBlock, error } = await (supabase as any)
     .from('blocks')
     .insert({
       user_id: user.id,
@@ -141,7 +141,7 @@ export async function updateBlock(blockId: string, formData: FormData) {
   const is_visible = formData.get('is_visible') === 'true'
 
   // Update block
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('blocks')
     .update({
       content,
@@ -167,7 +167,7 @@ export async function deleteBlock(blockId: string) {
     return { error: 'Not authenticated' }
   }
 
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('blocks')
     .delete()
     .eq('id', blockId)
@@ -192,7 +192,7 @@ export async function reorderBlocks(blockIds: string[]) {
 
   // Update order_index for each block
   const updates = blockIds.map((id, index) => 
-    supabase
+    (supabase as any)
       .from('blocks')
       .update({ order_index: index })
       .eq('id', id)
