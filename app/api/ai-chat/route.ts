@@ -105,9 +105,11 @@ and how to connect with them. Keep responses concise and engaging.`
 
     // Type-safe message handling
     type MessageType = {role: string; content: string; timestamp?: string}
-    const existingMessages: MessageType[] = (existingConv?.messages && Array.isArray(existingConv.messages)) 
-      ? (existingConv.messages as MessageType[])
-      : []
+    let existingMessages: MessageType[] = []
+    
+    if (existingConv && existingConv.messages && Array.isArray(existingConv.messages)) {
+      existingMessages = existingConv.messages as MessageType[]
+    }
     
     const updatedMessages = [
       ...existingMessages,
