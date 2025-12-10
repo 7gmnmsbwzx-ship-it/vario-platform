@@ -137,24 +137,25 @@ and how to connect with them. Keep responses concise and engaging.`
       // Update existing conversation
       const currentTokens = (typeof conv.tokens_used === 'number') ? conv.tokens_used : 0
       
-      await supabase
+      // Use type assertion for the entire query chain
+      await (supabase
         .from('ai_conversations')
         .update({
-          messages: updatedMessages as any,
+          messages: updatedMessages,
           tokens_used: currentTokens + tokensUsed,
           updated_at: new Date().toISOString(),
-        } as any)
-        .eq('id', conv.id)
+        })
+        .eq('id', conv.id) as any)
     } else {
       // Create new conversation
-      await supabase
+      await (supabase
         .from('ai_conversations')
         .insert({
           user_id: userId,
           visitor_id: visitorId || 'anonymous',
           messages: updatedMessages,
           tokens_used: tokensUsed,
-        })
+        }) as any)
     }
 
     // Track analytics
