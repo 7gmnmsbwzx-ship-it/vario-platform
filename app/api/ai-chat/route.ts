@@ -103,8 +103,13 @@ and how to connect with them. Keep responses concise and engaging.`
       .limit(1)
       .single()
 
+    // Type-safe message handling
+    const existingMessages = Array.isArray(existingConv?.messages) 
+      ? (existingConv.messages as Array<{role: string; content: string; timestamp?: string}>)
+      : []
+    
     const updatedMessages = [
-      ...(existingConv?.messages as any[] || []),
+      ...existingMessages,
       ...messages,
       {
         role: 'assistant',
