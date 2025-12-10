@@ -1,6 +1,7 @@
+'use server'
+
 // Authentication Actions
 // Handle user sign up, sign in, sign out
-// Compatible with Edge Runtime
 
 import { createServerClient } from '@/lib/supabase/server'
 import { signUpSchema, signInSchema } from '@/lib/utils/validators'

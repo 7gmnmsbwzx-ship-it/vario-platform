@@ -1,8 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getUserProfile } from '@/lib/actions/profile'
 
-export const runtime = 'edge'
-
 export default async function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
   const profile = await getUserProfile(username)

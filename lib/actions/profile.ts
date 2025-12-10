@@ -1,5 +1,6 @@
+'use server'
+
 // Profile Management Actions
-// Compatible with Edge Runtime
 
 import { createServerClient } from '@/lib/supabase/server'
 import { profileSchema } from '@/lib/utils/validators'
