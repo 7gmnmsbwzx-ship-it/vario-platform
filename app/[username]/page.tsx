@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
 import { getUserProfile } from '@/lib/actions/profile'
+import type { UserProfile } from '@/types/database.types'
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
-  const profile = await getUserProfile(username)
+  const profile = await getUserProfile(username) as UserProfile | null
 
   if (!profile) {
     notFound()
@@ -94,7 +95,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
-  const profile = await getUserProfile(username)
+  const profile = await getUserProfile(username) as UserProfile | null
 
   if (!profile) {
     return {
