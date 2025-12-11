@@ -79,7 +79,7 @@ export async function signUp(
       id: authData.user.id,
       username: normalizedUsername,
       display_name: displayName,
-      theme_id: 'minimal',
+      theme_id: 1,
       is_public: true,
     }] as any)
 
