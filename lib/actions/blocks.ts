@@ -36,6 +36,13 @@ export async function createBlockSimple(type: string, content: any) {
   }
 
   try {
+    // Get user's username for revalidation
+    const { data: profile } = await (supabase as any)
+      .from('users_profile')
+      .select('username')
+      .eq('id', user.id)
+      .single()
+
     // Get max order_index
     const { data: existingBlocks } = await (supabase as any)
       .from('blocks')
@@ -66,8 +73,14 @@ export async function createBlockSimple(type: string, content: any) {
       return { error: error.message }
     }
 
+    // Revalidate all relevant paths
     revalidatePath('/dashboard')
     revalidatePath(`/dashboard/blocks`)
+    
+    // CRITICAL: Revalidate the public profile page so blocks appear immediately
+    if (profile?.username) {
+      revalidatePath(`/${profile.username}`)
+    }
     
     return { success: true, block: newBlock }
   } catch (error: any) {
@@ -94,6 +107,13 @@ export async function createBlock(formData: FormData) {
       error: validation.error.errors[0].message,
     }
   }
+
+  // Get user's username for revalidation
+  const { data: profile } = await (supabase as any)
+    .from('users_profile')
+    .select('username')
+    .eq('id', user.id)
+    .single()
 
   // Get max order_index
   const { data: existingBlocks } = await (supabase as any)
@@ -124,7 +144,14 @@ export async function createBlock(formData: FormData) {
     return { error: error.message }
   }
 
+  // Revalidate all relevant paths
   revalidatePath('/dashboard')
+  revalidatePath('/dashboard/blocks')
+  
+  // CRITICAL: Revalidate the public profile page so blocks appear immediately
+  if (profile?.username) {
+    revalidatePath(`/${profile.username}`)
+  }
   
   return { success: true, block: newBlock }
 }
@@ -140,6 +167,13 @@ export async function updateBlock(blockId: string, formData: FormData) {
   const content = JSON.parse(formData.get('content') as string)
   const is_visible = formData.get('is_visible') === 'true'
 
+  // Get user's username for revalidation
+  const { data: profile } = await (supabase as any)
+    .from('users_profile')
+    .select('username')
+    .eq('id', user.id)
+    .single()
+
   // Update block
   const { error } = await (supabase as any)
     .from('blocks')
@@ -154,7 +188,14 @@ export async function updateBlock(blockId: string, formData: FormData) {
     return { error: error.message }
   }
 
+  // Revalidate all relevant paths
   revalidatePath('/dashboard')
+  revalidatePath('/dashboard/blocks')
+  
+  // CRITICAL: Revalidate the public profile page
+  if (profile?.username) {
+    revalidatePath(`/${profile.username}`)
+  }
   
   return { success: true }
 }
@@ -167,6 +208,13 @@ export async function deleteBlock(blockId: string) {
     return { error: 'Not authenticated' }
   }
 
+  // Get user's username for revalidation
+  const { data: profile } = await (supabase as any)
+    .from('users_profile')
+    .select('username')
+    .eq('id', user.id)
+    .single()
+
   const { error } = await (supabase as any)
     .from('blocks')
     .delete()
@@ -177,7 +225,14 @@ export async function deleteBlock(blockId: string) {
     return { error: error.message }
   }
 
+  // Revalidate all relevant paths
   revalidatePath('/dashboard')
+  revalidatePath('/dashboard/blocks')
+  
+  // CRITICAL: Revalidate the public profile page
+  if (profile?.username) {
+    revalidatePath(`/${profile.username}`)
+  }
   
   return { success: true }
 }
@@ -190,6 +245,13 @@ export async function reorderBlocks(blockIds: string[]) {
     return { error: 'Not authenticated' }
   }
 
+  // Get user's username for revalidation
+  const { data: profile } = await (supabase as any)
+    .from('users_profile')
+    .select('username')
+    .eq('id', user.id)
+    .single()
+
   // Update order_index for each block
   const updates = blockIds.map((id, index) => 
     (supabase as any)
@@ -201,7 +263,14 @@ export async function reorderBlocks(blockIds: string[]) {
 
   await Promise.all(updates)
 
+  // Revalidate all relevant paths
   revalidatePath('/dashboard')
+  revalidatePath('/dashboard/blocks')
+  
+  // CRITICAL: Revalidate the public profile page
+  if (profile?.username) {
+    revalidatePath(`/${profile.username}`)
+  }
   
   return { success: true }
 }

@@ -64,31 +64,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               </div>
             ) : (
               blocks.map((block: any) => {
-                // Link block
-                if (block.type === 'link') {
-                  return (
-                    <a
-                      key={block.id}
-                      href={block.content.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block bg-white rounded-xl p-6 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          {block.content.icon && (
-                            <i className={`${block.content.icon} text-2xl text-indigo-600`}></i>
-                          )}
-                          <span className="text-lg font-semibold text-gray-900">
-                            {block.content.title}
-                          </span>
-                        </div>
-                        <i className="fas fa-arrow-right text-gray-400"></i>
-                      </div>
-                    </a>
-                  )
-                }
-
                 // Text block
                 if (block.type === 'text') {
                   return (
@@ -96,8 +71,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       key={block.id}
                       className="bg-white rounded-xl p-6 shadow-lg"
                     >
-                      <p className="text-gray-700 text-center whitespace-pre-wrap">
-                        {block.content.content || block.content.text}
+                      {block.content.heading && (
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">
+                          {block.content.heading}
+                        </h3>
+                      )}
+                      <p className="text-gray-700 whitespace-pre-wrap">
+                        {block.content.text || block.content.content}
                       </p>
                     </div>
                   )
@@ -124,7 +104,108 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   )
                 }
 
-                // Default fallback for other types
+                // Button/Link block
+                if (block.type === 'button' || block.type === 'link') {
+                  return (
+                    <a
+                      key={block.id}
+                      href={block.content.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block bg-white rounded-xl p-6 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {block.content.icon && (
+                            <span className="text-2xl">{block.content.icon}</span>
+                          )}
+                          <span className="text-lg font-semibold text-gray-900">
+                            {block.content.title || block.content.label}
+                          </span>
+                        </div>
+                        <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </a>
+                  )
+                }
+
+                // Social Links block
+                if (block.type === 'social_links') {
+                  return (
+                    <div
+                      key={block.id}
+                      className="bg-white rounded-xl p-6 shadow-lg"
+                    >
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">
+                        Connect with me
+                      </h3>
+                      <div className="flex flex-wrap justify-center gap-4">
+                        {block.content.links?.map((link: any, idx: number) => (
+                          <a
+                            key={idx}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-full hover:scale-110 transition-transform shadow-lg"
+                          >
+                            <span className="text-xl">{link.icon || '🔗'}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                }
+
+                // Embed block
+                if (block.type === 'embed') {
+                  return (
+                    <div
+                      key={block.id}
+                      className="bg-white rounded-xl overflow-hidden shadow-lg"
+                    >
+                      <div className="aspect-video">
+                        <iframe
+                          src={block.content.url}
+                          className="w-full h-full"
+                          allowFullScreen
+                          title={block.content.title || 'Embedded content'}
+                        />
+                      </div>
+                      {block.content.caption && (
+                        <p className="p-4 text-center text-gray-600">
+                          {block.content.caption}
+                        </p>
+                      )}
+                    </div>
+                  )
+                }
+
+                // AI Chat block (placeholder - would need actual implementation)
+                if (block.type === 'ai_chat') {
+                  return (
+                    <div
+                      key={block.id}
+                      className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 shadow-lg border-2 border-indigo-200"
+                    >
+                      <div className="text-center">
+                        <div className="text-4xl mb-3">🤖</div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">
+                          {block.content.title || 'AI Chat'}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-4">
+                          {block.content.description || 'Chat with AI assistant'}
+                        </p>
+                        <button className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                          Start Chat
+                        </button>
+                      </div>
+                    </div>
+                  )
+                }
+
+                // Default fallback for unknown types
                 return null
               })
             )}
