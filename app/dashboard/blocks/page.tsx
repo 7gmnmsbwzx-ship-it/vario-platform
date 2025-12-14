@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getProfile } from '@/lib/actions/profile'
+import { createBlockSimple } from '@/lib/actions/blocks'
 
 type BlockType = 'text' | 'image' | 'button' | 'social_links' | 'embed' | 'ai_chat'
 
@@ -36,306 +37,240 @@ export default function BlocksPage() {
     {
       type: 'text' as BlockType,
       icon: '📝',
+      emoji: '✍️',
       name: 'Text Block',
       description: 'Add a heading or paragraph',
-      gradient: 'from-indigo-500 to-purple-600',
-      bgGradient: 'from-indigo-50 to-purple-50',
-      borderColor: 'hover:border-indigo-400',
-      shadowColor: 'hover:shadow-indigo-200'
+      color: 'from-blue-500 to-indigo-600',
+      bgColor: 'bg-blue-50',
+      textColor: 'text-blue-600'
     },
     {
       type: 'image' as BlockType,
       icon: '🖼️',
+      emoji: '🖼️',
       name: 'Image',
       description: 'Upload and display an image',
-      gradient: 'from-purple-500 to-pink-600',
-      bgGradient: 'from-purple-50 to-pink-50',
-      borderColor: 'hover:border-purple-400',
-      shadowColor: 'hover:shadow-purple-200'
+      color: 'from-purple-500 to-pink-600',
+      bgColor: 'bg-purple-50',
+      textColor: 'text-purple-600'
     },
     {
       type: 'button' as BlockType,
       icon: '🔗',
+      emoji: '🔗',
       name: 'Button Link',
       description: 'Add a clickable button with URL',
-      gradient: 'from-blue-500 to-cyan-600',
-      bgGradient: 'from-blue-50 to-cyan-50',
-      borderColor: 'hover:border-blue-400',
-      shadowColor: 'hover:shadow-blue-200'
+      color: 'from-cyan-500 to-blue-600',
+      bgColor: 'bg-cyan-50',
+      textColor: 'text-cyan-600'
     },
     {
       type: 'social_links' as BlockType,
       icon: '📱',
+      emoji: '📱',
       name: 'Social Links',
       description: 'Display social media icons',
-      gradient: 'from-pink-500 to-rose-600',
-      bgGradient: 'from-pink-50 to-rose-50',
-      borderColor: 'hover:border-pink-400',
-      shadowColor: 'hover:shadow-pink-200'
+      color: 'from-pink-500 to-rose-600',
+      bgColor: 'bg-pink-50',
+      textColor: 'text-pink-600'
     },
     {
       type: 'embed' as BlockType,
       icon: '🎬',
+      emoji: '🎬',
       name: 'Embed',
       description: 'Embed YouTube, Spotify, etc.',
-      gradient: 'from-green-500 to-emerald-600',
-      bgGradient: 'from-green-50 to-emerald-50',
-      borderColor: 'hover:border-green-400',
-      shadowColor: 'hover:shadow-green-200'
+      color: 'from-green-500 to-emerald-600',
+      bgColor: 'bg-green-50',
+      textColor: 'text-green-600'
     },
     {
       type: 'ai_chat' as BlockType,
       icon: '🤖',
+      emoji: '🤖',
       name: 'AI Chat',
       description: 'Interactive AI chatbot widget',
-      gradient: 'from-orange-500 to-amber-600',
-      bgGradient: 'from-orange-50 to-amber-50',
-      borderColor: 'hover:border-orange-400',
-      shadowColor: 'hover:shadow-orange-200'
+      color: 'from-orange-500 to-amber-600',
+      bgColor: 'bg-orange-50',
+      textColor: 'text-orange-600'
     }
   ]
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative w-20 h-20 mx-auto mb-4">
-            <div className="absolute inset-0 rounded-full border-4 border-indigo-200 animate-ping"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-t-indigo-600 animate-spin"></div>
-          </div>
-          <p className="text-lg font-semibold text-gray-700">Loading your workspace...</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-600 font-medium">Loading...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
-
-      {/* Header with Glassmorphism */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-white/20 shadow-lg">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      {/* Apple-style Header */}
+      <div className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link 
                 href="/dashboard" 
-                className="flex items-center gap-2 text-gray-700 hover:text-indigo-600 transition-colors group"
+                className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors font-medium"
               >
-                <svg className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                <span className="font-medium">Back to Dashboard</span>
+                <span>Dashboard</span>
               </Link>
-              <div className="h-6 w-px bg-gray-300"></div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Manage Blocks
-              </h1>
+              <div className="w-px h-6 bg-gray-300"></div>
+              <h1 className="text-2xl font-semibold text-gray-900">Choose a Block Type</h1>
             </div>
+            {profile && (
+              <div className="flex items-center gap-3">
+                <Link
+                  href={`/${profile.username}`}
+                  target="_blank"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-all hover:scale-105"
+                >
+                  View Page
+                </Link>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+                  {profile.display_name?.[0] || '?'}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12 relative z-10">
-        {/* Block Type Selection */}
-        {!selectedType && (
-          <div className="max-w-6xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-4xl font-bold text-gray-900 mb-3">
-                Choose a Block Type
-              </h2>
-              <p className="text-lg text-gray-600">
-                Select the type of content you want to add to your page
-              </p>
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        {!selectedType ? (
+          <>
+            {/* Subtitle */}
+            <div className="text-center mb-12">
+              <p className="text-lg text-gray-600">Select the type of content you want to add to your page</p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blockTypes.map((blockType, index) => (
+            {/* Block Type Cards - Apple Style Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+              {blockTypes.map((blockType) => (
                 <button
                   key={blockType.type}
                   onClick={() => setSelectedType(blockType.type)}
-                  className={`
-                    group relative p-8 bg-white/80 backdrop-blur-sm border-2 border-gray-200
-                    rounded-3xl transition-all duration-300 text-left
-                    transform hover:-translate-y-2 hover:scale-105
-                    ${blockType.borderColor} ${blockType.shadowColor}
-                    hover:shadow-2xl hover:border-opacity-100
-                    animate-fade-in
-                  `}
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  className="group relative bg-white rounded-3xl p-8 border border-gray-200 hover:border-gray-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 text-left"
                 >
-                  {/* Gradient Background on Hover */}
-                  <div className={`
-                    absolute inset-0 bg-gradient-to-br ${blockType.bgGradient}
-                    rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                  `}></div>
-                  
+                  {/* Icon */}
+                  <div className={`w-16 h-16 ${blockType.bgColor} rounded-2xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    {blockType.emoji}
+                  </div>
+
                   {/* Content */}
-                  <div className="relative z-10">
-                    {/* Icon with 3D Effect */}
-                    <div className="mb-5 transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-                      <div className="text-6xl filter drop-shadow-lg">
-                        {blockType.icon}
-                      </div>
-                    </div>
-                    
-                    {/* Title */}
-                    <h3 className="font-bold text-xl text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-gray-900 group-hover:to-gray-700 transition-all">
-                      {blockType.name}
-                    </h3>
-                    
-                    {/* Description */}
-                    <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
-                      {blockType.description}
-                    </p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {blockType.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-6">
+                    {blockType.description}
+                  </p>
 
-                    {/* Arrow Icon */}
-                    <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-gray-400 group-hover:text-indigo-600 transition-colors">
-                      <span>Create</span>
-                      <svg className="w-4 h-4 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
+                  {/* Create Button */}
+                  <div className="flex items-center gap-2 text-blue-600 font-medium text-sm group-hover:gap-3 transition-all">
+                    <span>Create</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
 
-                  {/* Shine Effect */}
-                  <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 transform -skew-x-12 group-hover:translate-x-full transition-all duration-1000"></div>
-                  </div>
+                  {/* Hover Effect */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity pointer-events-none"
+                    style={{ 
+                      backgroundImage: `linear-gradient(135deg, ${blockType.color.split(' ')[1]} 0%, ${blockType.color.split(' ')[3]} 100%)`
+                    }}
+                  ></div>
                 </button>
               ))}
             </div>
 
-            {/* Additional Info Card */}
-            <div className="mt-12 max-w-3xl mx-auto bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-white/40 shadow-lg">
+            {/* Pro Tip - Apple Style */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-100">
               <div className="flex items-start gap-4">
-                <div className="text-4xl">✨</div>
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <span className="text-2xl">✨</span>
+                </div>
                 <div>
-                  <h3 className="font-bold text-xl text-gray-900 mb-2">Pro Tip</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Pro Tip</h3>
                   <p className="text-gray-700 leading-relaxed">
-                    You can combine multiple blocks to create unique layouts. Each block is fully customizable 
-                    and can be reordered on your profile page. Start with the basics and build your perfect page!
+                    You can combine multiple blocks to create unique layouts. Each block is fully customizable and can be reordered on your profile page. Start with the basics and build your perfect page!
                   </p>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Block Creation Form */}
-        {selectedType && (
-          <div className="max-w-2xl mx-auto animate-fade-in">
-            <button
-              onClick={() => setSelectedType(null)}
-              className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
-            >
-              <svg className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              <span className="font-medium">Back to block types</span>
-            </button>
-
-            <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl p-10 border border-white/40">
-              <div className="mb-8">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="text-5xl">
-                    {blockTypes.find(b => b.type === selectedType)?.icon}
+          </>
+        ) : (
+          <div className="max-w-3xl mx-auto">
+            {/* Form Container with Apple Style */}
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
+              {/* Form Header */}
+              <div className={`${blockTypes.find(b => b.type === selectedType)?.bgColor} p-8 border-b border-gray-200`}>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-4xl shadow-lg">
+                    {blockTypes.find(b => b.type === selectedType)?.emoji}
                   </div>
-                  <h2 className="text-3xl font-bold text-gray-900">
-                    Create {blockTypes.find(b => b.type === selectedType)?.name}
-                  </h2>
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-900">
+                      {blockTypes.find(b => b.type === selectedType)?.name}
+                    </h2>
+                    <p className="text-gray-600 mt-1">
+                      {blockTypes.find(b => b.type === selectedType)?.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="h-1 w-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
               </div>
 
-              {selectedType === 'text' && <TextBlockForm onCancel={() => setSelectedType(null)} />}
-              {selectedType === 'image' && <ImageBlockForm onCancel={() => setSelectedType(null)} />}
-              {selectedType === 'button' && <ButtonBlockForm onCancel={() => setSelectedType(null)} />}
-              {selectedType === 'social_links' && <SocialLinksBlockForm onCancel={() => setSelectedType(null)} />}
-              {selectedType === 'embed' && <EmbedBlockForm onCancel={() => setSelectedType(null)} />}
-              {selectedType === 'ai_chat' && <AIChatBlockForm onCancel={() => setSelectedType(null)} />}
+              {/* Form Content */}
+              <div className="p-8">
+                {selectedType === 'text' && <TextBlockForm onSuccess={() => setSelectedType(null)} onCancel={() => setSelectedType(null)} />}
+                {selectedType === 'image' && <ImageBlockForm onSuccess={() => setSelectedType(null)} onCancel={() => setSelectedType(null)} />}
+                {selectedType === 'button' && <ButtonBlockForm onSuccess={() => setSelectedType(null)} onCancel={() => setSelectedType(null)} />}
+                {selectedType === 'social_links' && <SocialLinksBlockForm onSuccess={() => setSelectedType(null)} onCancel={() => setSelectedType(null)} />}
+                {selectedType === 'embed' && <EmbedBlockForm onSuccess={() => setSelectedType(null)} onCancel={() => setSelectedType(null)} />}
+                {selectedType === 'ai_chat' && <AIChatBlockForm onSuccess={() => setSelectedType(null)} onCancel={() => setSelectedType(null)} />}
+              </div>
             </div>
           </div>
         )}
-      </main>
-
-      {/* Add CSS for animations */}
-      <style jsx global>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
+      </div>
     </div>
   )
 }
 
-// Enhanced Form Components with 3D styling
-function TextBlockForm({ onCancel }: { onCancel: () => void }) {
-  const router = useRouter()
+// Text Block Form Component
+function TextBlockForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
   const [heading, setHeading] = useState('')
-  const [content, setContent] = useState('')
+  const [text, setText] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSaving(true)
     setError('')
-    
+    setSaving(true)
+
     try {
-      const { createBlockSimple } = await import('@/lib/actions/blocks')
       const result = await createBlockSimple('text', {
         heading,
-        text: content
+        text
       })
-      
+
       if (result.error) {
         setError(result.error)
-        setSaving(false)
-        return
+      } else {
+        alert('Text block created successfully!')
+        onSuccess()
       }
-      
-      alert('Text block created successfully!')
-      router.refresh()
-      onCancel()
     } catch (err: any) {
       setError(err.message || 'Failed to create block')
+    } finally {
       setSaving(false)
     }
   }
@@ -343,100 +278,87 @@ function TextBlockForm({ onCancel }: { onCancel: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-            <span>{error}</span>
-          </div>
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
-      
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Heading</label>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Heading</label>
         <input
           type="text"
           value={heading}
           onChange={(e) => setHeading(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all"
-          placeholder="Enter a catchy heading"
+          placeholder="Enter your heading"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-900"
           required
         />
       </div>
-      
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Content</label>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Content</label>
         <textarea
-          rows={5}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           placeholder="Write your content here..."
+          rows={5}
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none resize-none text-gray-900"
           required
         />
       </div>
-      
-      <div className="flex gap-4 pt-4">
-        <button
-          type="button"
+
+      <div className="flex gap-3 pt-4">
+        <button 
+          type="button" 
           onClick={onCancel}
-          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105"
+          className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
         >
           Cancel
         </button>
-        <button
+        <button 
           type="submit"
           disabled={saving}
-          className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {saving ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Creating...
-            </span>
-          ) : 'Create Text Block'}
+          {saving ? 'Creating...' : 'Create Text Block'}
         </button>
       </div>
     </form>
   )
 }
 
-// Placeholder forms with enhanced styling (keep same functionality)
-function ImageBlockForm({ onCancel }: { onCancel: () => void }) {
-  const router = useRouter()
-  const [imageUrl, setImageUrl] = useState('')
+// Image Block Form Component
+function ImageBlockForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
+  const [url, setUrl] = useState('')
+  const [alt, setAlt] = useState('')
   const [caption, setCaption] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSaving(true)
     setError('')
-    
+    setSaving(true)
+
     try {
-      const { createBlockSimple } = await import('@/lib/actions/blocks')
       const result = await createBlockSimple('image', {
-        url: imageUrl,
-        caption: caption || undefined,
-        alt: caption || 'Image'
+        url,
+        alt,
+        caption
       })
-      
+
       if (result.error) {
         setError(result.error)
-        setSaving(false)
-        return
+      } else {
+        alert('Image block created successfully!')
+        onSuccess()
       }
-      
-      alert('Image block created successfully!')
-      router.refresh()
-      onCancel()
     } catch (err: any) {
       setError(err.message || 'Failed to create block')
+    } finally {
       setSaving(false)
     }
   }
@@ -444,88 +366,97 @@ function ImageBlockForm({ onCancel }: { onCancel: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-            <span>{error}</span>
-          </div>
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
-      
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Image URL</label>
         <input
           type="url"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com/image.jpg"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none text-gray-900"
           required
         />
       </div>
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Caption (Optional)</label>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Alt Text</label>
+        <input
+          type="text"
+          value={alt}
+          onChange={(e) => setAlt(e.target.value)}
+          placeholder="Describe the image"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none text-gray-900"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Caption (Optional)</label>
         <input
           type="text"
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all"
-          placeholder="Add a caption for your image"
+          placeholder="Add a caption"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none text-gray-900"
         />
       </div>
-      <div className="flex gap-4 pt-4">
-        <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
+
+      <div className="flex gap-3 pt-4">
+        <button 
+          type="button" 
+          onClick={onCancel}
+          className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
+        >
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-          {saving ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Creating...
-            </span>
-          ) : 'Create Image Block'}
+        <button 
+          type="submit"
+          disabled={saving}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50"
+        >
+          {saving ? 'Creating...' : 'Create Image Block'}
         </button>
       </div>
     </form>
   )
 }
 
-function ButtonBlockForm({ onCancel }: { onCancel: () => void }) {
-  const router = useRouter()
-  const [buttonText, setButtonText] = useState('')
-  const [linkUrl, setLinkUrl] = useState('')
+// Button Block Form Component
+function ButtonBlockForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
+  const [label, setLabel] = useState('')
+  const [url, setUrl] = useState('')
+  const [icon, setIcon] = useState('🔗')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSaving(true)
     setError('')
-    
+    setSaving(true)
+
     try {
-      const { createBlockSimple } = await import('@/lib/actions/blocks')
       const result = await createBlockSimple('button', {
-        title: buttonText,
-        label: buttonText,
-        url: linkUrl
+        label,
+        url,
+        icon
       })
-      
+
       if (result.error) {
         setError(result.error)
-        setSaving(false)
-        return
+      } else {
+        alert('Button block created successfully!')
+        onSuccess()
       }
-      
-      alert('Button block created successfully!')
-      router.refresh()
-      onCancel()
     } catch (err: any) {
       setError(err.message || 'Failed to create block')
+    } finally {
       setSaving(false)
     }
   }
@@ -533,104 +464,110 @@ function ButtonBlockForm({ onCancel }: { onCancel: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-            <span>{error}</span>
-          </div>
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
-      
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Button Text</label>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Button Label</label>
         <input
           type="text"
-          value={buttonText}
-          onChange={(e) => setButtonText(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all"
-          placeholder="Click me!"
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+          placeholder="Visit My Website"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all outline-none text-gray-900"
           required
         />
       </div>
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Link URL</label>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">URL</label>
         <input
           type="url"
-          value={linkUrl}
-          onChange={(e) => setLinkUrl(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all outline-none text-gray-900"
           required
         />
       </div>
-      <div className="flex gap-4 pt-4">
-        <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Icon (Emoji)</label>
+        <input
+          type="text"
+          value={icon}
+          onChange={(e) => setIcon(e.target.value)}
+          placeholder="🔗"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all outline-none text-gray-900 text-2xl"
+        />
+      </div>
+
+      <div className="flex gap-3 pt-4">
+        <button 
+          type="button" 
+          onClick={onCancel}
+          className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
+        >
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-          {saving ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Creating...
-            </span>
-          ) : 'Create Button Block'}
+        <button 
+          type="submit"
+          disabled={saving}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50"
+        >
+          {saving ? 'Creating...' : 'Create Button'}
         </button>
       </div>
     </form>
   )
 }
 
-function SocialLinksBlockForm({ onCancel }: { onCancel: () => void }) {
-  const router = useRouter()
-  const [twitter, setTwitter] = useState('')
-  const [instagram, setInstagram] = useState('')
-  const [linkedin, setLinkedin] = useState('')
-  const [github, setGithub] = useState('')
+// Social Links Block Form Component
+function SocialLinksBlockForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
+  const [links, setLinks] = useState([
+    { platform: 'twitter', url: '', handle: '' }
+  ])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
+  const platforms = ['twitter', 'instagram', 'youtube', 'linkedin', 'github', 'tiktok', 'facebook']
+
+  const addLink = () => {
+    setLinks([...links, { platform: 'twitter', url: '', handle: '' }])
+  }
+
+  const removeLink = (index: number) => {
+    setLinks(links.filter((_, i) => i !== index))
+  }
+
+  const updateLink = (index: number, field: string, value: string) => {
+    const newLinks = [...links]
+    newLinks[index] = { ...newLinks[index], [field]: value }
+    setLinks(newLinks)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    // Validate at least one social link is provided
-    if (!twitter && !instagram && !linkedin && !github) {
-      setError('Please provide at least one social media link')
-      return
-    }
-    
-    setSaving(true)
     setError('')
-    
+    setSaving(true)
+
     try {
-      const { createBlockSimple } = await import('@/lib/actions/blocks')
-      
-      // Build links array
-      const links = []
-      if (twitter) links.push({ platform: 'twitter', url: twitter, icon: '𝕏' })
-      if (instagram) links.push({ platform: 'instagram', url: instagram, icon: '📷' })
-      if (linkedin) links.push({ platform: 'linkedin', url: linkedin, icon: '💼' })
-      if (github) links.push({ platform: 'github', url: github, icon: '💻' })
-      
-      const result = await createBlockSimple('social_links', {
-        links
-      })
-      
+      const result = await createBlockSimple('social_links', { links })
+
       if (result.error) {
         setError(result.error)
-        setSaving(false)
-        return
+      } else {
+        alert('Social links block created successfully!')
+        onSuccess()
       }
-      
-      alert('Social links block created successfully!')
-      router.refresh()
-      onCancel()
     } catch (err: any) {
       setError(err.message || 'Failed to create block')
+    } finally {
       setSaving(false)
     }
   }
@@ -638,107 +575,126 @@ function SocialLinksBlockForm({ onCancel }: { onCancel: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-            <span>{error}</span>
-          </div>
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
-      
-      <p className="text-gray-600 mb-4">Add your social media links to connect with your audience</p>
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Twitter/X</label>
-        <input
-          type="url"
-          value={twitter}
-          onChange={(e) => setTwitter(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-100 focus:border-pink-500 transition-all"
-          placeholder="https://twitter.com/username"
-        />
+
+      <div className="space-y-4">
+        {links.map((link, index) => (
+          <div key={index} className="bg-gray-50 rounded-2xl p-6 space-y-4 relative">
+            {links.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeLink(index)}
+                className="absolute top-4 right-4 w-8 h-8 bg-red-100 hover:bg-red-200 text-red-600 rounded-full flex items-center justify-center transition-colors"
+              >
+                ×
+              </button>
+            )}
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Platform</label>
+              <select
+                value={link.platform}
+                onChange={(e) => updateLink(index, 'platform', e.target.value)}
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all outline-none text-gray-900"
+              >
+                {platforms.map(platform => (
+                  <option key={platform} value={platform}>
+                    {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Profile URL</label>
+              <input
+                type="url"
+                value={link.url}
+                onChange={(e) => updateLink(index, 'url', e.target.value)}
+                placeholder="https://twitter.com/username"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all outline-none text-gray-900"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Handle</label>
+              <input
+                type="text"
+                value={link.handle}
+                onChange={(e) => updateLink(index, 'handle', e.target.value)}
+                placeholder="@username"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all outline-none text-gray-900"
+              />
+            </div>
+          </div>
+        ))}
       </div>
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Instagram</label>
-        <input
-          type="url"
-          value={instagram}
-          onChange={(e) => setInstagram(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-100 focus:border-pink-500 transition-all"
-          placeholder="https://instagram.com/username"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">LinkedIn</label>
-        <input
-          type="url"
-          value={linkedin}
-          onChange={(e) => setLinkedin(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-100 focus:border-pink-500 transition-all"
-          placeholder="https://linkedin.com/in/username"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">GitHub</label>
-        <input
-          type="url"
-          value={github}
-          onChange={(e) => setGithub(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-100 focus:border-pink-500 transition-all"
-          placeholder="https://github.com/username"
-        />
-      </div>
-      <div className="flex gap-4 pt-4">
-        <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
+
+      <button
+        type="button"
+        onClick={addLink}
+        className="w-full px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+        Add Another Link
+      </button>
+
+      <div className="flex gap-3 pt-4">
+        <button 
+          type="button" 
+          onClick={onCancel}
+          className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
+        >
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-          {saving ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Creating...
-            </span>
-          ) : 'Create Social Links'}
+        <button 
+          type="submit"
+          disabled={saving}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50"
+        >
+          {saving ? 'Creating...' : 'Create Social Links'}
         </button>
       </div>
     </form>
   )
 }
 
-function EmbedBlockForm({ onCancel }: { onCancel: () => void }) {
-  const router = useRouter()
-  const [embedUrl, setEmbedUrl] = useState('')
+// Embed Block Form Component
+function EmbedBlockForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
+  const [url, setUrl] = useState('')
   const [title, setTitle] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSaving(true)
     setError('')
-    
+    setSaving(true)
+
     try {
-      const { createBlockSimple } = await import('@/lib/actions/blocks')
       const result = await createBlockSimple('embed', {
-        url: embedUrl,
-        title: title || 'Embedded Content'
+        url,
+        title
       })
-      
+
       if (result.error) {
         setError(result.error)
-        setSaving(false)
-        return
+      } else {
+        alert('Embed block created successfully!')
+        onSuccess()
       }
-      
-      alert('Embed block created successfully!')
-      router.refresh()
-      onCancel()
     } catch (err: any) {
       setError(err.message || 'Failed to create block')
+    } finally {
       setSaving(false)
     }
   }
@@ -746,219 +702,196 @@ function EmbedBlockForm({ onCancel }: { onCancel: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
-          <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-            <span>{error}</span>
-          </div>
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
-      
+
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Title (Optional)</label>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Embed URL</label>
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://www.youtube.com/watch?v=..."
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none text-gray-900"
+          required
+        />
+        <p className="text-sm text-gray-600 mt-2">Supports YouTube, Spotify, Twitter, and more</p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Title (Optional)</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all"
           placeholder="Give your embed a title"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all outline-none text-gray-900"
         />
       </div>
-      
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Embed URL</label>
-        <input
-          type="url"
-          value={embedUrl}
-          onChange={(e) => setEmbedUrl(e.target.value)}
-          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all"
-          placeholder="YouTube, Spotify, or other embed URL"
-          required
-        />
-        <p className="text-xs text-gray-500 mt-2">Supports YouTube, Spotify, SoundCloud, and more</p>
-      </div>
-      <div className="flex gap-4 pt-4">
-        <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
+
+      <div className="flex gap-3 pt-4">
+        <button 
+          type="button" 
+          onClick={onCancel}
+          className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
+        >
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-          {saving ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Creating...
-            </span>
-          ) : 'Create Embed Block'}
+        <button 
+          type="submit"
+          disabled={saving}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50"
+        >
+          {saving ? 'Creating...' : 'Create Embed'}
         </button>
       </div>
     </form>
   )
 }
 
-function AIChatBlockForm({ onCancel }: { onCancel: () => void }) {
-  const router = useRouter()
-  const [chatTitle, setChatTitle] = useState('💬 Chat with AI')
+// AI Chat Block Form Component
+function AIChatBlockForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel: () => void }) {
+  const [title, setTitle] = useState('Chat with AI')
+  const [description, setDescription] = useState('Ask me anything!')
   const [welcomeMessage, setWelcomeMessage] = useState('Hi! I\'m here to help. Ask me anything!')
-  const [description, setDescription] = useState('Chat with our AI assistant')
   const [personality, setPersonality] = useState('friendly')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSaving(true)
     setError('')
-    
+    setSaving(true)
+
     try {
-      const { createBlockSimple } = await import('@/lib/actions/blocks')
       const result = await createBlockSimple('ai_chat', {
-        title: chatTitle,
-        description: description,
-        welcomeMessage: welcomeMessage,
-        personality: personality
+        title,
+        description,
+        welcomeMessage,
+        personality
       })
-      
+
       if (result.error) {
         setError(result.error)
-        setSaving(false)
-        return
+      } else {
+        alert('AI Chat block created successfully!')
+        onSuccess()
       }
-      
-      alert('AI Chat block created successfully!')
-      router.refresh()
-      onCancel()
     } catch (err: any) {
       setError(err.message || 'Failed to create block')
+    } finally {
       setSaving(false)
     }
   }
 
   return (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-200 rounded-2xl p-6 mb-4">
-        <div className="flex items-start gap-4">
-          <div className="text-4xl">🤖</div>
-          <div>
-            <h3 className="font-bold text-orange-900 text-lg mb-2">AI Chat Block</h3>
-            <p className="text-sm text-orange-800">
-              Add an interactive AI chatbot to your page. Visitors can ask questions and get instant responses powered by AI.
-            </p>
-          </div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
+      )}
+
+      <div>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Chat Title</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Chat with AI"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none text-gray-900"
+          required
+        />
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <span>{error}</span>
-            </div>
-          </div>
-        )}
-        
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Chat Title</label>
-          <input
-            type="text"
-            value={chatTitle}
-            onChange={(e) => setChatTitle(e.target.value)}
-            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all"
-            required
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all"
-            placeholder="Brief description of the chat"
-            required
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Welcome Message</label>
-          <textarea
-            rows={3}
-            value={welcomeMessage}
-            onChange={(e) => setWelcomeMessage(e.target.value)}
-            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all resize-none"
-            required
-          />
-        </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Description</label>
+        <input
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Ask me anything!"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none text-gray-900"
+        />
+      </div>
 
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">AI Personality</label>
-          <select
-            value={personality}
-            onChange={(e) => setPersonality(e.target.value)}
-            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all"
-          >
-            <option value="friendly">Friendly & Helpful</option>
-            <option value="professional">Professional</option>
-            <option value="casual">Casual & Fun</option>
-            <option value="expert">Expert & Detailed</option>
-          </select>
-        </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">Welcome Message</label>
+        <textarea
+          value={welcomeMessage}
+          onChange={(e) => setWelcomeMessage(e.target.value)}
+          placeholder="Hi! I'm here to help. Ask me anything!"
+          rows={3}
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none resize-none text-gray-900"
+          required
+        />
+      </div>
 
-        <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6">
-          <h4 className="font-semibold text-gray-900 mb-3">Features Included:</h4>
-          <ul className="space-y-2 text-sm text-gray-600">
-            <li className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Real-time AI responses
-            </li>
-            <li className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Conversation history
-            </li>
-            <li className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Customizable appearance
-            </li>
-            <li className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Mobile-friendly interface
-            </li>
-          </ul>
-        </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-900 mb-3">AI Personality</label>
+        <select
+          value={personality}
+          onChange={(e) => setPersonality(e.target.value)}
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all outline-none text-gray-900"
+        >
+          <option value="friendly">Friendly & Helpful</option>
+          <option value="professional">Professional</option>
+          <option value="casual">Casual & Fun</option>
+          <option value="expert">Expert & Detailed</option>
+        </select>
+      </div>
 
-        <div className="flex gap-4 pt-4">
-          <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
-            Cancel
-          </button>
-          <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-            {saving ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Creating...
-              </span>
-            ) : 'Create AI Chat Block'}
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 border border-orange-100">
+        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          <span className="text-orange-600">✨</span>
+          Features Included
+        </h4>
+        <ul className="space-y-2 text-sm text-gray-700">
+          <li className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Real-time AI responses
+          </li>
+          <li className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Conversation history
+          </li>
+          <li className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Mobile-friendly interface
+          </li>
+        </ul>
+      </div>
+
+      <div className="flex gap-3 pt-4">
+        <button 
+          type="button" 
+          onClick={onCancel}
+          className="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          disabled={saving}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white rounded-xl font-semibold transition-all disabled:opacity-50"
+        >
+          {saving ? 'Creating...' : 'Create AI Chat'}
+        </button>
+      </div>
+    </form>
   )
 }
-/* Enhanced 3D Manage Blocks - Sun Dec 14 11:02:33 UTC 2025 */
