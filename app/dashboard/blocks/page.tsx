@@ -713,3 +713,4 @@ function AIChatBlockForm({ onCancel }: { onCancel: () => void }) {
     </div>
   )
 }
+/* Enhanced 3D Manage Blocks - Sun Dec 14 11:02:33 UTC 2025 */
