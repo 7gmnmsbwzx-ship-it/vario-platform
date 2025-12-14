@@ -407,21 +407,53 @@ function TextBlockForm({ onCancel }: { onCancel: () => void }) {
 
 // Placeholder forms with enhanced styling (keep same functionality)
 function ImageBlockForm({ onCancel }: { onCancel: () => void }) {
+  const router = useRouter()
   const [imageUrl, setImageUrl] = useState('')
-  const [altText, setAltText] = useState('')
+  const [caption, setCaption] = useState('')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    alert('Image block created successfully! (Database integration pending)')
-    setSaving(false)
-    onCancel()
+    setError('')
+    
+    try {
+      const { createBlockSimple } = await import('@/lib/actions/blocks')
+      const result = await createBlockSimple('image', {
+        url: imageUrl,
+        caption: caption || undefined,
+        alt: caption || 'Image'
+      })
+      
+      if (result.error) {
+        setError(result.error)
+        setSaving(false)
+        return
+      }
+      
+      alert('Image block created successfully!')
+      router.refresh()
+      onCancel()
+    } catch (err: any) {
+      setError(err.message || 'Failed to create block')
+      setSaving(false)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+      
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
         <input
@@ -434,22 +466,29 @@ function ImageBlockForm({ onCancel }: { onCancel: () => void }) {
         />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Alt Text</label>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">Caption (Optional)</label>
         <input
           type="text"
-          value={altText}
-          onChange={(e) => setAltText(e.target.value)}
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
           className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all"
-          placeholder="Describe your image"
-          required
+          placeholder="Add a caption for your image"
         />
       </div>
       <div className="flex gap-4 pt-4">
         <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50">
-          {saving ? 'Creating...' : 'Create Image Block'}
+        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          {saving ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Creating...
+            </span>
+          ) : 'Create Image Block'}
         </button>
       </div>
     </form>
@@ -457,21 +496,53 @@ function ImageBlockForm({ onCancel }: { onCancel: () => void }) {
 }
 
 function ButtonBlockForm({ onCancel }: { onCancel: () => void }) {
+  const router = useRouter()
   const [buttonText, setButtonText] = useState('')
   const [linkUrl, setLinkUrl] = useState('')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    alert('Button block created successfully! (Database integration pending)')
-    setSaving(false)
-    onCancel()
+    setError('')
+    
+    try {
+      const { createBlockSimple } = await import('@/lib/actions/blocks')
+      const result = await createBlockSimple('button', {
+        title: buttonText,
+        label: buttonText,
+        url: linkUrl
+      })
+      
+      if (result.error) {
+        setError(result.error)
+        setSaving(false)
+        return
+      }
+      
+      alert('Button block created successfully!')
+      router.refresh()
+      onCancel()
+    } catch (err: any) {
+      setError(err.message || 'Failed to create block')
+      setSaving(false)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+      
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">Button Text</label>
         <input
@@ -498,8 +569,16 @@ function ButtonBlockForm({ onCancel }: { onCancel: () => void }) {
         <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50">
-          {saving ? 'Creating...' : 'Create Button Block'}
+        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          {saving ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Creating...
+            </span>
+          ) : 'Create Button Block'}
         </button>
       </div>
     </form>
@@ -507,22 +586,68 @@ function ButtonBlockForm({ onCancel }: { onCancel: () => void }) {
 }
 
 function SocialLinksBlockForm({ onCancel }: { onCancel: () => void }) {
+  const router = useRouter()
   const [twitter, setTwitter] = useState('')
   const [instagram, setInstagram] = useState('')
   const [linkedin, setLinkedin] = useState('')
+  const [github, setGithub] = useState('')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate at least one social link is provided
+    if (!twitter && !instagram && !linkedin && !github) {
+      setError('Please provide at least one social media link')
+      return
+    }
+    
     setSaving(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    alert('Social links block created successfully! (Database integration pending)')
-    setSaving(false)
-    onCancel()
+    setError('')
+    
+    try {
+      const { createBlockSimple } = await import('@/lib/actions/blocks')
+      
+      // Build links array
+      const links = []
+      if (twitter) links.push({ platform: 'twitter', url: twitter, icon: '𝕏' })
+      if (instagram) links.push({ platform: 'instagram', url: instagram, icon: '📷' })
+      if (linkedin) links.push({ platform: 'linkedin', url: linkedin, icon: '💼' })
+      if (github) links.push({ platform: 'github', url: github, icon: '💻' })
+      
+      const result = await createBlockSimple('social_links', {
+        links
+      })
+      
+      if (result.error) {
+        setError(result.error)
+        setSaving(false)
+        return
+      }
+      
+      alert('Social links block created successfully!')
+      router.refresh()
+      onCancel()
+    } catch (err: any) {
+      setError(err.message || 'Failed to create block')
+      setSaving(false)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+      
       <p className="text-gray-600 mb-4">Add your social media links to connect with your audience</p>
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">Twitter/X</label>
@@ -554,12 +679,30 @@ function SocialLinksBlockForm({ onCancel }: { onCancel: () => void }) {
           placeholder="https://linkedin.com/in/username"
         />
       </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">GitHub</label>
+        <input
+          type="url"
+          value={github}
+          onChange={(e) => setGithub(e.target.value)}
+          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-pink-100 focus:border-pink-500 transition-all"
+          placeholder="https://github.com/username"
+        />
+      </div>
       <div className="flex gap-4 pt-4">
         <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50">
-          {saving ? 'Creating...' : 'Create Social Links'}
+        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          {saving ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Creating...
+            </span>
+          ) : 'Create Social Links'}
         </button>
       </div>
     </form>
@@ -567,20 +710,63 @@ function SocialLinksBlockForm({ onCancel }: { onCancel: () => void }) {
 }
 
 function EmbedBlockForm({ onCancel }: { onCancel: () => void }) {
+  const router = useRouter()
   const [embedUrl, setEmbedUrl] = useState('')
+  const [title, setTitle] = useState('')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    alert('Embed block created successfully! (Database integration pending)')
-    setSaving(false)
-    onCancel()
+    setError('')
+    
+    try {
+      const { createBlockSimple } = await import('@/lib/actions/blocks')
+      const result = await createBlockSimple('embed', {
+        url: embedUrl,
+        title: title || 'Embedded Content'
+      })
+      
+      if (result.error) {
+        setError(result.error)
+        setSaving(false)
+        return
+      }
+      
+      alert('Embed block created successfully!')
+      router.refresh()
+      onCancel()
+    } catch (err: any) {
+      setError(err.message || 'Failed to create block')
+      setSaving(false)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+      
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">Title (Optional)</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 transition-all"
+          placeholder="Give your embed a title"
+        />
+      </div>
+      
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">Embed URL</label>
         <input
@@ -597,8 +783,16 @@ function EmbedBlockForm({ onCancel }: { onCancel: () => void }) {
         <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
           Cancel
         </button>
-        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50">
-          {saving ? 'Creating...' : 'Create Embed Block'}
+        <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          {saving ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Creating...
+            </span>
+          ) : 'Create Embed Block'}
         </button>
       </div>
     </form>
@@ -606,18 +800,41 @@ function EmbedBlockForm({ onCancel }: { onCancel: () => void }) {
 }
 
 function AIChatBlockForm({ onCancel }: { onCancel: () => void }) {
+  const router = useRouter()
   const [chatTitle, setChatTitle] = useState('💬 Chat with AI')
   const [welcomeMessage, setWelcomeMessage] = useState('Hi! I\'m here to help. Ask me anything!')
+  const [description, setDescription] = useState('Chat with our AI assistant')
   const [personality, setPersonality] = useState('friendly')
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    alert('AI Chat block created successfully! (Database integration pending)')
-    setSaving(false)
-    onCancel()
+    setError('')
+    
+    try {
+      const { createBlockSimple } = await import('@/lib/actions/blocks')
+      const result = await createBlockSimple('ai_chat', {
+        title: chatTitle,
+        description: description,
+        welcomeMessage: welcomeMessage,
+        personality: personality
+      })
+      
+      if (result.error) {
+        setError(result.error)
+        setSaving(false)
+        return
+      }
+      
+      alert('AI Chat block created successfully!')
+      router.refresh()
+      onCancel()
+    } catch (err: any) {
+      setError(err.message || 'Failed to create block')
+      setSaving(false)
+    }
   }
 
   return (
@@ -635,6 +852,17 @@ function AIChatBlockForm({ onCancel }: { onCancel: () => void }) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg text-sm animate-fade-in">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <span>{error}</span>
+            </div>
+          </div>
+        )}
+        
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Chat Title</label>
           <input
@@ -642,6 +870,18 @@ function AIChatBlockForm({ onCancel }: { onCancel: () => void }) {
             value={chatTitle}
             onChange={(e) => setChatTitle(e.target.value)}
             className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all"
+            required
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+          <input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition-all"
+            placeholder="Brief description of the chat"
             required
           />
         </div>
@@ -705,8 +945,16 @@ function AIChatBlockForm({ onCancel }: { onCancel: () => void }) {
           <button type="button" onClick={onCancel} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-xl font-semibold transition-all transform hover:scale-105">
             Cancel
           </button>
-          <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50">
-            {saving ? 'Creating...' : 'Create AI Chat Block'}
+          <button type="submit" disabled={saving} className="flex-1 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+            {saving ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating...
+              </span>
+            ) : 'Create AI Chat Block'}
           </button>
         </div>
       </form>
