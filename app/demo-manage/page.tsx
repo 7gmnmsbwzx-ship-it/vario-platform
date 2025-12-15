@@ -19,6 +19,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { BlockStyleEditor } from './block-style-editor'
 
 type BlockType = 'text' | 'image' | 'button' | 'social_links' | 'embed' | 'ai_chat'
 
@@ -29,6 +30,15 @@ interface Block {
   order_index: number
   is_visible: boolean
   size?: 'small' | 'medium' | 'large' // For grid layout
+  style?: {
+    backgroundColor?: string
+    borderRadius?: 'none' | 'small' | 'medium' | 'large' | 'full'
+    borderWidth?: '0' | '1' | '2' | '4'
+    borderColor?: string
+    shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+    textAlign?: 'left' | 'center' | 'right'
+    padding?: 'small' | 'medium' | 'large'
+  }
 }
 
 // Demo data - no authentication required
@@ -103,6 +113,8 @@ export default function DemoManageBlocksPage() {
   const [blocks, setBlocks] = useState<Block[]>(DEMO_BLOCKS)
   const [showAddMenu, setShowAddMenu] = useState(false)
   const [selectedType, setSelectedType] = useState<BlockType | null>(null)
+  const [editingBlock, setEditingBlock] = useState<Block | null>(null)
+  const [showStyleEditor, setShowStyleEditor] = useState(false)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -128,6 +140,26 @@ export default function DemoManageBlocksPage() {
     if (!confirm('Delete this block? (Demo mode - just for preview)')) return
     setBlocks(blocks.filter(b => b.id !== blockId))
     alert('✅ Block deleted! (Demo mode)')
+  }
+
+  const handleEditBlock = (blockId: string) => {
+    const block = blocks.find(b => b.id === blockId)
+    if (block) {
+      setEditingBlock(block)
+      setShowStyleEditor(true)
+    }
+  }
+
+  const handleUpdateBlockStyle = (style: any) => {
+    if (!editingBlock) return
+    
+    const updatedBlocks = blocks.map(b => 
+      b.id === editingBlock.id 
+        ? { ...b, style: { ...b.style, ...style } }
+        : b
+    )
+    setBlocks(updatedBlocks)
+    setEditingBlock({ ...editingBlock, style: { ...editingBlock.style, ...style } })
   }
 
   const handleBlockCreated = (type: BlockType, content: any, size: 'small' | 'medium' | 'large' = 'medium') => {
@@ -330,6 +362,18 @@ export default function DemoManageBlocksPage() {
           onCancel={() => setSelectedType(null)}
         />
       )}
+
+      {/* Block Style Editor */}
+      {editingBlock && showStyleEditor && (
+        <BlockStyleEditor
+          block={editingBlock}
+          onUpdate={handleUpdateBlockStyle}
+          onClose={() => {
+            setEditingBlock(null)
+            setShowStyleEditor(false)
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -360,26 +404,57 @@ function SortableBlock({ block, onDelete }: { block: Block; onDelete: () => void
 
   const sizeClass = sizeClasses[block.size || 'medium']
 
+  // Apply custom styles
+  const customStyle = block.style || {}
+  const borderRadiusMap = {
+    square: '0px',
+    rounded: '8px',
+    'rounded-lg': '16px',
+    circle: '9999px',
+  }
+
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className={`group relative bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-all cursor-move ${sizeClass}`}
+      style={{
+        ...style,
+        backgroundColor: customStyle.bgColor || '#FFFFFF',
+        borderRadius: borderRadiusMap[customStyle.shape as keyof typeof borderRadiusMap] || '16px',
+        borderWidth: `${customStyle.borderWidth || '0'}px`,
+        borderColor: '#E5E7EB',
+        borderStyle: 'solid',
+      }}
+      className={`group relative overflow-hidden hover:shadow-lg transition-all cursor-move ${sizeClass}`}
       {...attributes}
       {...listeners}
     >
-      {/* Delete Button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation()
-          onDelete()
-        }}
-        className="absolute top-2 right-2 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
-      >
-        <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      {/* Action Buttons */}
+      <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onEdit()
+          }}
+          className="w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-blue-50"
+          title="Edit Style"
+        >
+          <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}
+          className="w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-red-50"
+          title="Delete Block"
+        >
+          <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
       {/* Block Content */}
       <BlockContent block={block} />
