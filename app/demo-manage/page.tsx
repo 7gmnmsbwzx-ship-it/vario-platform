@@ -301,44 +301,76 @@ export default function DemoManagePageV2() {
               </div>
             </div>
 
-            {/* AI Chat Card - Conditional Display */}
+            {/* AI Chat Card - Modern Fancy Design */}
             {showAIChat ? (
-              <div className="bg-white rounded-3xl p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-1">AI CHAT</h3>
-                    <p className="text-xs text-gray-500">SF Display Medium, 18pt</p>
+              <div className="relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-[2px] shadow-xl">
+                {/* Inner white card with gradient border effect */}
+                <div className="bg-white rounded-3xl p-6">
+                  {/* Header with sparkle icon */}
+                  <div className="mb-5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                          AI Assistant
+                        </h3>
+                        <p className="text-xs text-gray-500 font-medium">Powered by AI</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setShowAIChat(false)
+                        alert('❌ AI Chat Hidden\n\nClick "Show AI Chat" button to display it again.')
+                      }}
+                      className="w-8 h-8 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-all hover:scale-110"
+                    >
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      setShowAIChat(false)
-                      alert('❌ AI Chat Hidden\n\nClick "Show AI Chat" button to display it again.')
-                    }}
-                    className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center"
-                  >
-                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
 
-                <input
-                  type="text"
-                  placeholder="Ask anything..."
-                  className="w-full px-4 py-3 bg-gray-50 rounded-2xl text-sm outline-none mb-3"
-                  readOnly
-                />
-
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">Enable AI Chat</span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      className="sr-only peer" 
-                      defaultChecked
+                  {/* Fancy input field with icon */}
+                  <div className="relative mb-4">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Ask me anything..."
+                      className="w-full pl-12 pr-4 py-4 bg-gradient-to-r from-gray-50 to-purple-50 rounded-2xl text-sm outline-none border-2 border-transparent focus:border-purple-300 focus:from-white focus:to-purple-50 transition-all placeholder:text-gray-400"
+                      readOnly
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center cursor-pointer hover:scale-110 transition-all shadow-lg">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status with fancy toggle */}
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-sm font-semibold text-gray-700">AI Active</span>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        className="sr-only peer" 
+                        defaultChecked
+                      />
+                      <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all after:shadow-md peer-checked:bg-gradient-to-r peer-checked:from-indigo-500 peer-checked:to-purple-600"></div>
+                    </label>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -347,13 +379,18 @@ export default function DemoManagePageV2() {
                   setShowAIChat(true)
                   alert('✅ AI Chat Enabled\n\nAI Chat widget is now visible in the sidebar.')
                 }}
-                className="w-full bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 rounded-3xl p-6 shadow-sm transition-all border-2 border-dashed border-indigo-200"
+                className="w-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 group"
               >
                 <div className="flex items-center justify-center gap-3">
-                  <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                  </svg>
-                  <span className="font-semibold text-indigo-900">Show AI Chat</span>
+                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <div className="text-left">
+                    <div className="font-bold text-white text-lg">Enable AI Assistant</div>
+                    <div className="text-xs text-white/80">Click to activate</div>
+                  </div>
                 </div>
               </button>
             )}
