@@ -192,30 +192,33 @@ export default function DemoManagePageV2() {
           
           {/* Left Sidebar */}
           <div className="space-y-4">
-            {/* Profile Card */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm">
-              <div className="flex flex-col items-center text-center mb-6">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 mb-4 flex items-center justify-center overflow-hidden">
-                  <div className="text-4xl">👨‍💼</div>
+            {/* Profile Card with Social Links */}
+            <div className="bg-white rounded-3xl p-8 shadow-sm">
+              <div className="flex flex-col items-center text-center">
+                {/* Profile Avatar */}
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-purple-200 mb-6 flex items-center justify-center overflow-hidden">
+                  <div className="text-5xl">👨‍💼</div>
                 </div>
-                <h1 className="text-xl font-bold text-gray-900 mb-1">{DEMO_PROFILE.display_name}</h1>
-                <p className="text-sm text-gray-600">{DEMO_PROFILE.bio}</p>
-              </div>
-
-              {/* Social Links - 4 in a row */}
-              <div className="grid grid-cols-4 gap-2">
-                {SOCIAL_LINKS.map((social) => (
-                  <button
-                    key={social.id}
-                    onClick={() => handleSocialFollow(social.platform)}
-                    className={`flex flex-col items-center gap-2 p-3 ${social.bgColor} rounded-2xl hover:shadow-md transition-all`}
-                  >
-                    <div className={`text-2xl ${social.color} font-bold`}>
-                      {social.icon}
-                    </div>
-                    <div className="text-xs font-medium text-gray-700">Follow</div>
-                  </button>
-                ))}
+                
+                {/* Profile Info */}
+                <h1 className="text-2xl font-bold text-gray-900 mb-2 tracking-tight">{DEMO_PROFILE.display_name}</h1>
+                <p className="text-base text-gray-600 mb-8">{DEMO_PROFILE.bio}</p>
+                
+                {/* Social Links - Horizontal Row */}
+                <div className="flex gap-4 w-full justify-center">
+                  {SOCIAL_LINKS.map((social) => (
+                    <button
+                      key={social.id}
+                      onClick={() => handleSocialFollow(social.platform)}
+                      className={`flex flex-col items-center justify-center gap-3 p-6 ${social.bgColor} rounded-3xl hover:shadow-lg transition-all flex-1 max-w-[90px]`}
+                    >
+                      <div className={`text-3xl ${social.color} font-bold`}>
+                        {social.icon}
+                      </div>
+                      <div className="text-sm font-semibold text-gray-800">Follow</div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
