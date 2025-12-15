@@ -88,6 +88,7 @@ export default function DemoManagePageV2() {
   const [showAddMenu, setShowAddMenu] = useState(false)
   const [editingBlock, setEditingBlock] = useState<Block | null>(null)
   const [showStyleEditor, setShowStyleEditor] = useState(false)
+  const [showAIChat, setShowAIChat] = useState(true)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -129,6 +130,13 @@ export default function DemoManagePageV2() {
   }
 
   const handleAddBlock = (type: BlockType) => {
+    // Prevent adding AI Chat blocks (only one fixed position in sidebar)
+    if (type === 'ai_chat') {
+      alert('❌ AI Chat Block\n\nAI Chat is only available in the left sidebar.\nYou can show/hide it using the toggle switch.\n\n(Only one AI Chat block is allowed per page)')
+      setShowAddMenu(false)
+      return
+    }
+
     const newBlock: Block = {
       id: `block-${Date.now()}`,
       type,
@@ -211,28 +219,62 @@ export default function DemoManagePageV2() {
               </div>
             </div>
 
-            {/* AI Chat Card */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm">
-              <div className="mb-4">
-                <h3 className="text-base font-bold text-gray-900 mb-1">AI CHAT</h3>
-                <p className="text-xs text-gray-500">SF Display Medium, 18pt</p>
-              </div>
+            {/* AI Chat Card - Conditional Display */}
+            {showAIChat ? (
+              <div className="bg-white rounded-3xl p-6 shadow-sm">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900 mb-1">AI CHAT</h3>
+                    <p className="text-xs text-gray-500">SF Display Medium, 18pt</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowAIChat(false)
+                      alert('❌ AI Chat Hidden\n\nClick "Show AI Chat" button to display it again.')
+                    }}
+                    className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center"
+                  >
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
 
-              <input
-                type="text"
-                placeholder="Ask anything..."
-                className="w-full px-4 py-3 bg-gray-50 rounded-2xl text-sm outline-none mb-3"
-                readOnly
-              />
+                <input
+                  type="text"
+                  placeholder="Ask anything..."
+                  className="w-full px-4 py-3 bg-gray-50 rounded-2xl text-sm outline-none mb-3"
+                  readOnly
+                />
 
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500">SF Display Regular, 16pt</span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" defaultChecked />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                </label>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Enable AI Chat</span>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="sr-only peer" 
+                      defaultChecked
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
               </div>
-            </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setShowAIChat(true)
+                  alert('✅ AI Chat Enabled\n\nAI Chat widget is now visible in the sidebar.')
+                }}
+                className="w-full bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 rounded-3xl p-6 shadow-sm transition-all border-2 border-dashed border-indigo-200"
+              >
+                <div className="flex items-center justify-center gap-3">
+                  <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                  <span className="font-semibold text-indigo-900">Show AI Chat</span>
+                </div>
+              </button>
+            )}
 
             {/* Weather Widget */}
             <div className="bg-white rounded-3xl p-4 shadow-sm">
@@ -421,7 +463,7 @@ export default function DemoManagePageV2() {
 
               <button
                 onClick={() => handleAddBlock('ai_chat')}
-                className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all text-left"
+                className="w-full flex items-center gap-4 p-4 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-all text-left opacity-60 cursor-not-allowed"
               >
                 <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -429,8 +471,8 @@ export default function DemoManagePageV2() {
                   </svg>
                 </div>
                 <div>
-                  <div className="font-semibold text-gray-900">AI Chat</div>
-                  <div className="text-sm text-gray-500">Add AI chatbot widget</div>
+                  <div className="font-semibold text-gray-700">AI Chat</div>
+                  <div className="text-sm text-gray-500">Fixed in left sidebar only</div>
                 </div>
               </button>
             </div>
