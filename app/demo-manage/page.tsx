@@ -239,10 +239,10 @@ export default function DemoManagePageV2() {
 
       {/* Main 2-Column Layout */}
       <div className="max-w-[1400px] mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           
-          {/* Left Sidebar */}
-          <div className="space-y-4">
+          {/* Left Sidebar - Fixed on Scroll */}
+          <div className="w-full lg:w-[380px] lg:sticky lg:top-8 lg:self-start space-y-4 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
             {/* Profile Card with Social Links */}
             <div className="bg-white rounded-3xl p-8 shadow-sm">
               <div className="flex flex-col items-center text-center">
@@ -413,8 +413,8 @@ export default function DemoManagePageV2() {
             </div>
           </div>
 
-          {/* Right Content Area */}
-          <div className="space-y-4">
+          {/* Right Content Area - Scrollable */}
+          <div className="flex-1 space-y-4">
             {/* Content Blocks - Complex Grid */}
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <SortableContext items={blocks.map(b => b.id)} strategy={rectSortingStrategy}>
