@@ -255,26 +255,27 @@ export default function DemoManagePageV2() {
                 <h1 className="text-2xl font-bold text-gray-900 mb-2 tracking-tight">{DEMO_PROFILE.display_name}</h1>
                 <p className="text-base text-gray-600 mb-8">{DEMO_PROFILE.bio}</p>
                 
-                {/* Social Links - Dynamic Horizontal Row */}
+                {/* Social Links - Compact Icon-Only Display */}
                 {socialLinks.length > 0 ? (
-                  <div className="flex flex-wrap gap-4 w-full justify-center mb-6">
+                  <div className="flex flex-wrap gap-3 w-full justify-center mb-6">
                     {socialLinks.map((social) => (
                       <div key={social.id} className="relative group">
                         <button
                           onClick={() => handleSocialFollow(social.platform)}
-                          className={`flex flex-col items-center justify-center gap-3 p-6 ${social.bgColor} rounded-3xl hover:shadow-lg transition-all w-[90px]`}
+                          title={`Follow on ${social.platform}`}
+                          className={`flex items-center justify-center p-3 ${social.bgColor} rounded-2xl hover:shadow-lg hover:scale-110 transition-all w-12 h-12`}
                         >
-                          <div className={`text-3xl ${social.color} font-bold`}>
+                          <div className={`text-2xl ${social.color} font-bold leading-none`}>
                             {social.icon}
                           </div>
-                          <div className="text-sm font-semibold text-gray-800">Follow</div>
                         </button>
                         {/* Delete Button */}
                         <button
                           onClick={() => handleDeleteSocialLink(social.id)}
-                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg flex items-center justify-center"
+                          title="Remove this link"
+                          className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg flex items-center justify-center"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
