@@ -76,7 +76,20 @@ const DEMO_BLOCKS: Block[] = [
   },
 ]
 
-const SOCIAL_LINKS = [
+// Available social platforms
+const AVAILABLE_SOCIAL_PLATFORMS = [
+  { platform: 'Twitter', icon: '𝕏', color: 'text-blue-400', bgColor: 'bg-blue-50', url: 'https://twitter.com/' },
+  { platform: 'LinkedIn', icon: 'in', color: 'text-blue-600', bgColor: 'bg-blue-50', url: 'https://linkedin.com/in/' },
+  { platform: 'TikTok', icon: '♪', color: 'text-black', bgColor: 'bg-gray-50', url: 'https://tiktok.com/@' },
+  { platform: 'Instagram', icon: '📷', color: 'text-pink-500', bgColor: 'bg-pink-50', url: 'https://instagram.com/' },
+  { platform: 'YouTube', icon: '▶', color: 'text-red-600', bgColor: 'bg-red-50', url: 'https://youtube.com/@' },
+  { platform: 'Facebook', icon: 'f', color: 'text-blue-700', bgColor: 'bg-blue-50', url: 'https://facebook.com/' },
+  { platform: 'GitHub', icon: 'gh', color: 'text-gray-900', bgColor: 'bg-gray-50', url: 'https://github.com/' },
+  { platform: 'Discord', icon: '💬', color: 'text-indigo-600', bgColor: 'bg-indigo-50', url: 'https://discord.gg/' },
+]
+
+// Initial social links (can be modified by user)
+const INITIAL_SOCIAL_LINKS = [
   { id: 's1', platform: 'Twitter', icon: '𝕏', color: 'text-blue-400', bgColor: 'bg-blue-50' },
   { id: 's2', platform: 'LinkedIn', icon: 'in', color: 'text-blue-600', bgColor: 'bg-blue-50' },
   { id: 's3', platform: 'TikTok', icon: '♪', color: 'text-black', bgColor: 'bg-gray-50' },
@@ -85,7 +98,9 @@ const SOCIAL_LINKS = [
 
 export default function DemoManagePageV2() {
   const [blocks, setBlocks] = useState<Block[]>(DEMO_BLOCKS)
+  const [socialLinks, setSocialLinks] = useState(INITIAL_SOCIAL_LINKS)
   const [showAddMenu, setShowAddMenu] = useState(false)
+  const [showAddSocialMenu, setShowAddSocialMenu] = useState(false)
   const [editingBlock, setEditingBlock] = useState<Block | null>(null)
   const [showStyleEditor, setShowStyleEditor] = useState(false)
   const [showAIChat, setShowAIChat] = useState(true)
@@ -137,6 +152,13 @@ export default function DemoManagePageV2() {
       return
     }
 
+    // Prevent adding Social Links to content blocks (only in sidebar)
+    if (type === 'social_links') {
+      alert('❌ Social Links Block\n\nSocial Links are only available in the left sidebar.\nClick "Add Social Link" button in the profile card.\n\n(Social links are fixed in sidebar only)')
+      setShowAddMenu(false)
+      return
+    }
+
     const newBlock: Block = {
       id: `block-${Date.now()}`,
       type,
@@ -148,6 +170,35 @@ export default function DemoManagePageV2() {
     setBlocks([...blocks, newBlock])
     setShowAddMenu(false)
     alert(`✅ ${type.toUpperCase()} block added! (Demo mode - changes not saved)`)
+  }
+
+  const handleAddSocialLink = (platform: string) => {
+    const platformData = AVAILABLE_SOCIAL_PLATFORMS.find(p => p.platform === platform)
+    if (!platformData) return
+
+    // Check if platform already exists
+    if (socialLinks.find(s => s.platform === platform)) {
+      alert(`⚠️ ${platform} Already Added\n\nThis social platform is already in your profile.`)
+      setShowAddSocialMenu(false)
+      return
+    }
+
+    const newSocialLink = {
+      id: `s${Date.now()}`,
+      platform: platformData.platform,
+      icon: platformData.icon,
+      color: platformData.color,
+      bgColor: platformData.bgColor
+    }
+    setSocialLinks([...socialLinks, newSocialLink])
+    setShowAddSocialMenu(false)
+    alert(`✅ ${platform} Added!\n\nSocial link added to your profile. (Demo mode - changes not saved)`)
+  }
+
+  const handleDeleteSocialLink = (linkId: string) => {
+    if (!confirm('Remove this social link?')) return
+    setSocialLinks(socialLinks.filter(s => s.id !== linkId))
+    alert('✅ Social link removed!')
   }
 
   const handleViewsClick = () => {
@@ -204,21 +255,48 @@ export default function DemoManagePageV2() {
                 <h1 className="text-2xl font-bold text-gray-900 mb-2 tracking-tight">{DEMO_PROFILE.display_name}</h1>
                 <p className="text-base text-gray-600 mb-8">{DEMO_PROFILE.bio}</p>
                 
-                {/* Social Links - Horizontal Row */}
-                <div className="flex gap-4 w-full justify-center">
-                  {SOCIAL_LINKS.map((social) => (
-                    <button
-                      key={social.id}
-                      onClick={() => handleSocialFollow(social.platform)}
-                      className={`flex flex-col items-center justify-center gap-3 p-6 ${social.bgColor} rounded-3xl hover:shadow-lg transition-all flex-1 max-w-[90px]`}
-                    >
-                      <div className={`text-3xl ${social.color} font-bold`}>
-                        {social.icon}
+                {/* Social Links - Dynamic Horizontal Row */}
+                {socialLinks.length > 0 ? (
+                  <div className="flex flex-wrap gap-4 w-full justify-center mb-6">
+                    {socialLinks.map((social) => (
+                      <div key={social.id} className="relative group">
+                        <button
+                          onClick={() => handleSocialFollow(social.platform)}
+                          className={`flex flex-col items-center justify-center gap-3 p-6 ${social.bgColor} rounded-3xl hover:shadow-lg transition-all w-[90px]`}
+                        >
+                          <div className={`text-3xl ${social.color} font-bold`}>
+                            {social.icon}
+                          </div>
+                          <div className="text-sm font-semibold text-gray-800">Follow</div>
+                        </button>
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => handleDeleteSocialLink(social.id)}
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg flex items-center justify-center"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
                       </div>
-                      <div className="text-sm font-semibold text-gray-800">Follow</div>
-                    </button>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mb-6 text-center text-gray-500 text-sm py-4">
+                    No social links yet. Click below to add!
+                  </div>
+                )}
+                
+                {/* Add Social Link Button */}
+                <button
+                  onClick={() => setShowAddSocialMenu(true)}
+                  className="w-full py-3 px-4 bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 rounded-2xl text-sm font-semibold text-gray-700 transition-all flex items-center justify-center gap-2 border border-dashed border-gray-300"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Social Link
+                </button>
               </div>
             </div>
 
@@ -436,7 +514,7 @@ export default function DemoManagePageV2() {
 
               <button
                 onClick={() => handleAddBlock('social_links')}
-                className="w-full flex items-center gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all text-left"
+                className="w-full flex items-center gap-4 p-4 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-all text-left opacity-60 cursor-not-allowed"
               >
                 <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
                   <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -444,8 +522,8 @@ export default function DemoManagePageV2() {
                   </svg>
                 </div>
                 <div>
-                  <div className="font-semibold text-gray-900">Social Links</div>
-                  <div className="text-sm text-gray-500">Add social media links</div>
+                  <div className="font-semibold text-gray-700">Social Links</div>
+                  <div className="text-sm text-gray-500">Fixed in left sidebar only</div>
                 </div>
               </button>
 
@@ -478,6 +556,62 @@ export default function DemoManagePageV2() {
                   <div className="text-sm text-gray-500">Fixed in left sidebar only</div>
                 </div>
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Social Link Modal */}
+      {showAddSocialMenu && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowAddSocialMenu(false)}>
+          <div className="bg-white rounded-3xl p-8 shadow-2xl max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Add Social Link</h2>
+              <button
+                onClick={() => setShowAddSocialMenu(false)}
+                className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center"
+              >
+                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+              {AVAILABLE_SOCIAL_PLATFORMS.map((platform) => {
+                const alreadyAdded = socialLinks.find(s => s.platform === platform.platform)
+                return (
+                  <button
+                    key={platform.platform}
+                    onClick={() => handleAddSocialLink(platform.platform)}
+                    disabled={!!alreadyAdded}
+                    className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all text-left ${
+                      alreadyAdded 
+                        ? 'bg-gray-100 opacity-50 cursor-not-allowed' 
+                        : 'bg-gray-50 hover:bg-gray-100'
+                    }`}
+                  >
+                    <div className={`w-12 h-12 ${platform.bgColor} rounded-xl flex items-center justify-center`}>
+                      <div className={`text-2xl ${platform.color} font-bold`}>
+                        {platform.icon}
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className={`font-semibold ${alreadyAdded ? 'text-gray-500' : 'text-gray-900'}`}>
+                        {platform.platform}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {alreadyAdded ? 'Already added' : 'Add to profile'}
+                      </div>
+                    </div>
+                    {alreadyAdded && (
+                      <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>
