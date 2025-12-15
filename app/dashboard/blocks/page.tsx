@@ -83,11 +83,8 @@ export default function BlocksPage() {
       setBlocks(newBlocks)
 
       // Update order in database
-      const updates = newBlocks.map((block, index) => ({
-        id: block.id,
-        order_index: index
-      }))
-      await reorderBlocks(updates)
+      const blockIds = newBlocks.map(block => block.id)
+      await reorderBlocks(blockIds)
     }
   }
 
