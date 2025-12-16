@@ -49,6 +49,18 @@ const SOCIAL_ICONS = [
   { id: 's4', platform: 'GitHub', icon: '</>', url: '#' },
 ]
 
+// Dock block types for macOS-style quick add
+const DOCK_BLOCK_TYPES = [
+  { id: 'link', icon: '🔗', label: 'Link', bgColor: 'bg-blue-500' },
+  { id: 'text', icon: '📝', label: 'Text', bgColor: 'bg-purple-500' },
+  { id: 'image', icon: '🖼️', label: 'Image', bgColor: 'bg-pink-500' },
+  { id: 'button', icon: '🔘', label: 'Button', bgColor: 'bg-green-500' },
+  { id: 'email', icon: '✉️', label: 'Email', bgColor: 'bg-orange-500' },
+  { id: 'music', icon: '🎵', label: 'Music', bgColor: 'bg-teal-500' },
+  { id: 'video', icon: '🎬', label: 'Video', bgColor: 'bg-red-500' },
+  { id: 'social', icon: '👥', label: 'Social', bgColor: 'bg-indigo-500' },
+]
+
 const DEMO_BLOCKS: Block[] = [
   {
     id: '1',
@@ -115,6 +127,7 @@ const DEMO_BLOCKS: Block[] = [
 export default function DemoManagePageRedesign() {
   const [blocks, setBlocks] = useState<Block[]>(DEMO_BLOCKS)
   const [searchQuery, setSearchQuery] = useState('')
+  const [hoveredDockItem, setHoveredDockItem] = useState<string | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -122,6 +135,21 @@ export default function DemoManagePageRedesign() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   )
+
+  const handleAddBlockFromDock = (blockType: string) => {
+    const newBlock: Block = {
+      id: `${Date.now()}`,
+      type: blockType as BlockType,
+      title: `New ${blockType.charAt(0).toUpperCase() + blockType.slice(1)} Block`,
+      description: 'Click to edit this block',
+      icon: DOCK_BLOCK_TYPES.find(d => d.id === blockType)?.icon || '📦',
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-900',
+      size: 'medium',
+    }
+    setBlocks([...blocks, newBlock])
+    alert(`Added new ${blockType} block!`)
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -216,13 +244,67 @@ export default function DemoManagePageRedesign() {
         {/* Content Blocks Grid */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={blocks.map(b => b.id)} strategy={rectSortingStrategy}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr mb-32">
               {blocks.map((block) => (
                 <SortableBlock key={block.id} block={block} />
               ))}
             </div>
           </SortableContext>
         </DndContext>
+      </div>
+
+      {/* macOS-Style Dock - Fixed at Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 pb-6 pointer-events-none">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="flex items-end justify-center gap-2 pointer-events-auto">
+            <div className="bg-white/30 backdrop-blur-2xl border border-white/50 rounded-[24px] p-3 shadow-2xl">
+              <div className="flex items-end gap-3">
+                {DOCK_BLOCK_TYPES.map((dockItem, index) => {
+                  const isHovered = hoveredDockItem === dockItem.id
+                  const distance = hoveredDockItem 
+                    ? Math.abs(DOCK_BLOCK_TYPES.findIndex(d => d.id === hoveredDockItem) - index)
+                    : 999
+                  
+                  // Scale based on distance from hovered item
+                  let scale = 1
+                  if (isHovered) scale = 1.5
+                  else if (distance === 1) scale = 1.3
+                  else if (distance === 2) scale = 1.15
+                  
+                  return (
+                    <button
+                      key={dockItem.id}
+                      onClick={() => handleAddBlockFromDock(dockItem.id)}
+                      onMouseEnter={() => setHoveredDockItem(dockItem.id)}
+                      onMouseLeave={() => setHoveredDockItem(null)}
+                      className={`${dockItem.bgColor} relative flex flex-col items-center justify-center rounded-2xl transition-all duration-200 ease-out shadow-lg hover:shadow-2xl group`}
+                      style={{
+                        width: `${48 * scale}px`,
+                        height: `${48 * scale}px`,
+                        transform: isHovered ? 'translateY(-12px)' : 'translateY(0)',
+                      }}
+                      title={dockItem.label}
+                    >
+                      {/* Icon */}
+                      <span className="text-2xl" style={{ fontSize: `${20 * scale}px` }}>
+                        {dockItem.icon}
+                      </span>
+                      
+                      {/* Tooltip on hover */}
+                      <div className={`absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap transition-opacity duration-200 ${isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                        {dockItem.label}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900/90"></div>
+                      </div>
+                      
+                      {/* Gloss effect */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent rounded-2xl pointer-events-none"></div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
