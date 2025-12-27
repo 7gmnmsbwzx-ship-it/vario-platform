@@ -18,6 +18,7 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // Original colors
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -51,6 +52,26 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // New Design System Colors
+        'brand': {
+          'lightest': '#E9F9F2',
+          'lighter': '#C1ECD8',
+          'base': '#74D8A1',
+          'accent': '#39B57E',
+          'dark': '#106146',
+        },
+        'neutral': {
+          'white': '#FFFFFF',
+          'bg': '#F7F7F8',
+          'divider': '#EBEBF0',
+          'border': '#C4C4CC',
+          'text3': '#8E8E93',
+          'text1': '#333333',
+          'black': '#000000',
+        },
+      },
+      backdropBlur: {
+        '18': '18px',
       },
       borderRadius: {
         lg: "var(--radius)",
